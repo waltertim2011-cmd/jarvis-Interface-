@@ -1,1 +1,199 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>J.A.R.V.I.S.</title>
 
+<style>
+*{box-sizing:border-box}
+
+body{
+  margin:0;
+  min-height:100vh;
+  background:#02070d;
+  color:#00d9ff;
+  font-family:Arial,sans-serif;
+}
+
+header{
+  padding:20px;
+  border-bottom:1px solid #06465c;
+  display:flex;
+  justify-content:space-between;
+}
+
+.logo{
+  font-size:25px;
+  font-weight:bold;
+  letter-spacing:5px;
+}
+
+.online{color:#00ff99}
+
+main{
+  max-width:1100px;
+  margin:auto;
+  padding:25px;
+}
+
+.voice{
+  text-align:center;
+  padding:25px;
+  border:1px solid #00d9ff;
+  border-radius:20px;
+  background:#03131d;
+}
+
+.orb{
+  width:130px;
+  height:130px;
+  margin:25px auto;
+  border:4px solid #00d9ff;
+  border-radius:50%;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  font-size:45px;
+  box-shadow:0 0 35px #00d9ff;
+}
+
+button{
+  padding:13px 20px;
+  margin:5px;
+  border-radius:12px;
+  border:1px solid #00d9ff;
+  background:#031923;
+  color:#00d9ff;
+  font-size:16px;
+}
+
+.grid{
+  display:grid;
+  grid-template-columns:repeat(auto-fit,minmax(220px,1fr));
+  gap:15px;
+  margin-top:20px;
+}
+
+.card{
+  padding:20px;
+  border:1px solid #06465c;
+  border-radius:15px;
+  background:#06121b;
+}
+
+.card h2{margin-top:0}
+
+#antwort{
+  color:white;
+  margin-top:15px;
+}
+</style>
+</head>
+
+<body>
+
+<header>
+  <div class="logo">J.A.R.V.I.S.</div>
+  <div class="online">● ONLINE</div>
+</header>
+
+<main>
+
+<section class="voice">
+
+<h2>Persönlicher KI-Assistent</h2>
+
+<div class="orb">🤖</div>
+
+<p>Was kann ich für dich tun?</p>
+
+<button onclick="sprechen()">🎙️ Sprechen</button>
+
+<div id="antwort">JARVIS ist bereit.</div>
+
+</section>
+
+<div class="grid">
+
+<div class="card">
+<h2>🖥️ System</h2>
+<p>System: 🟢 ONLINE</p>
+<p>Netzwerk: 🟢 Verbunden</p>
+<p>Sicherheit: 🟢 Aktiv</p>
+</div>
+
+<div class="card">
+<h2>⚡ Schnellzugriff</h2>
+<button onclick="antwort('System wird überprüft.')">
+System prüfen
+</button>
+<button onclick="antwort('Anwendungen werden geöffnet.')">
+Anwendungen
+</button>
+</div>
+
+<div class="card">
+<h2>📋 Aufgaben</h2>
+<p>☐ Projekt starten</p>
+<p>☐ Dateien prüfen</p>
+<p>☐ Nachrichten prüfen</p>
+</div>
+
+<div class="card">
+<h2>🕐 Uhr</h2>
+<p id="uhr"></p>
+</div>
+
+</div>
+
+</main>
+
+<script>
+
+function antwort(text){
+  document.getElementById("antwort").innerText=text;
+}
+
+function sprechen(){
+
+  if(!("webkitSpeechRecognition" in window)){
+    antwort("Spracherkennung wird auf diesem Browser nicht unterstützt.");
+    return;
+  }
+
+  const r=new webkitSpeechRecognition();
+
+  r.lang="de-DE";
+  r.start();
+
+  antwort("Ich höre zu...");
+
+  r.onresult=function(e){
+
+    const text=e.results[0][0].transcript;
+
+    antwort("Du hast gesagt: "+text);
+
+    if(text.toLowerCase().includes("hallo")){
+      antwort("Guten Tag. JARVIS ist bereit.");
+    }
+
+    if(text.toLowerCase().includes("system")){
+      antwort("Alle Systeme sind online.");
+    }
+  };
+}
+
+function uhr(){
+  document.getElementById("uhr").innerText=
+  new Date().toLocaleTimeString("de-DE");
+}
+
+setInterval(uhr,1000);
+uhr();
+
+</script>
+
+</body>
+</html>
